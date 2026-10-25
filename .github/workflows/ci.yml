@@ -1,0 +1,28 @@
+name: Flask application checks
+on:
+  push:
+    branches: [main, "feature/**", "fix/**"]
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m compileall -q app.py
+      - name: Smoke test
+        run: |
+          python - <<'PY'
+          import tempfile, os
+          os.environ["PHARMACY_DB"] = os.path.join(tempfile.gettempdir(), "pharmacy_ci_test.db")
+          import app
+          app.app.config.update(TESTING=True)
+          client = app.app.test_client()
+          response = client.get("/login")
+          assert response.status_code == 200
+          print("Basic application smoke check passed.")
+          PY

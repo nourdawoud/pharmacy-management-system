@@ -9,6 +9,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.environ.get("PHARMACY_DB", os.path.join(BASE_DIR, "pharmacy.db"))
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-development-key")
+# Keep session cookies unavailable to JavaScript and limit cross-site sending.
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
 
 
 def get_db():
@@ -129,7 +131,7 @@ def login():
     return render_template("login.html")
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     flash("You have been logged out.", "success")

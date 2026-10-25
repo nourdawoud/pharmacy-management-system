@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 Flask==3.0.3
 Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.3
 pytest==8.3.3
-=======
-Flask>=3.0,<4.0
-pytest>=8.0,<9.0
->>>>>>> 755e536a9282f5fa3c788c45f4ad6cd28993e9af
